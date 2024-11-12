@@ -34,16 +34,9 @@ filename = "REMTestParams_C{0}_L{1}_SLD{2}_R{3}_SFB{4}.omf".format(_centers_per_
 magna.m_field.to_file(filename, representation="txt")
 
 
-# changing file to fit sasview expected format
-file = open(filename, mode="r+")
-file.repl
 
 
 
-model = sv.Model()
-model.LoadFile(".\\" + filename)
 
-model.rotationAvg(dtheta=8, dphi=22.5, bins=50, QxMax=0.12)
-model.save(".\REMTestParams_C37_90rotate7.dat")
-model.plot()
-print("done")
+
+
