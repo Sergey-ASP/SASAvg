@@ -22,7 +22,6 @@ _sld = 1.0                       # in e-6 A^-2
 magna = mu.MNP(id=-1, name="test", n_layers=_layers, layer_radius=_layer_radius, discretizations=(5,5,5), r_tuple=(4e-9, _particle_radius, _particle_radius), form='hcp')
 mu.MNP.initialize(self=magna, m0=(1,0,0), fields='m')
 M = magna.m_field
-magna.save_fields()
 
 # uncomment if you want to see the field generated
 # M.sel('z').mpl()

@@ -1,6 +1,6 @@
 import SasViewRunner as sv
 import os
-import sas.qtgui.Plotting as pt
+import sasavg.sas.qtgui.Plotting as pt
 import numpy as np
 import matplotlib.pyplot as plt
 
