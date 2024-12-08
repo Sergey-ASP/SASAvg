@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
-from sasavg.sas.sascalc.calculator import sas_gen as sg
-from sasavg.sas.sascalc.calculator import geni
-from sasavg.sas.qtgui.Plotting.Slicers import SectorSlicer as ss
-import sasavg.sas.qtgui.Plotting.PlotterData as pltd
-import sasavg.sas.qtgui.Plotting.PlotUtilities as pu
+from sas.sascalc.calculator import sas_gen as sg
+from sas.sascalc.calculator import geni
+from sas.qtgui.Plotting.Slicers import SectorSlicer as ss
+import sas.qtgui.Plotting.PlotterData as pltd
+import sas.qtgui.Plotting.PlotUtilities as pu
 from scipy.spatial.transform import Rotation
 import copy
 from numpy.typing import NDArray
@@ -328,6 +328,9 @@ class Model:
         print("Avg computation completed in {0} hrs.".format(((time.time() - startTime)*numTheta*numPhi*numOmega/60/60)))
         self.data_to_plot = self.data.data
         self.is_avg=False
+
+
+
 
 
 # # model._xvals = xs
