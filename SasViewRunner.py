@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
-from sasavg.sas.sascalc.calculator import sas_gen as sg
-from sasavg.sas.sascalc.calculator import geni
-from sasavg.sas.qtgui.Plotting.Slicers import SectorSlicer as ss
-import sasavg.sas.qtgui.Plotting.PlotterData as pltd
-import sasavg.sas.qtgui.Plotting.PlotUtilities as pu
+from sas.sascalc.calculator import sas_gen as sg
+from sas.sascalc.calculator import geni
+from sas.qtgui.Plotting.Slicers import SectorSlicer as ss
+import sas.qtgui.Plotting.PlotterData as pltd
+import sas.qtgui.Plotting.PlotUtilities as pu
 from scipy.spatial.transform import Rotation
 import copy
 from numpy.typing import NDArray
@@ -30,12 +30,18 @@ class Model:
         pass
 
     def MagSLD2Model(self, data: sg.MagSLD):
+        """
+        Converts SLD data into SasView model.
+        """
         self._model = sg.GenSAS()
         self._model.set_sld_data(data)
         self._model.params["Up_theta"] = 90
         print("model created")
 
     def LoadFile(self, filepath: str):
+        """
+        Loads compatible OMF file.
+        """
         MagSLDData = None
         ext = filepath[-3:].lower()
         match ext:
@@ -169,22 +175,23 @@ class Model:
         self.data.ymax = ymax
 
     def plot(self):
-        """Plots data and scales it logarithmically.  Largely adapted from Sasview source code.
+        """Plots data and scales it logarithmically.  Adapted from Sasview source code.
+        THIS HAS SLIGHTLY DIFFERENT SCALING THAN WHAT SASVIEW USES IN ITS APPLICATION!
         """
-        x_coords = model.data.qx_data  # Length n
-        y_coords = model.data.qy_data  # Length n
-        intensities = model.data_to_plot  # Length n^2 (3x3)
+        x_coords = self.data.qx_data  # Length n
+        y_coords = self.data.qy_data  # Length n
+        intensities = self.data_to_plot  # Length n^2 (3x3)
         output = copy.deepcopy(intensities)
         try:
-            if model.data.zmin <= 0 and len(output[output > 0]) > 0:
-                zmin_temp = model.data.zmin
+            if self.data.zmin <= 0 and len(output[output > 0]) > 0:
+                zmin_temp = self.data.zmin
                 output[output > 0] = np.log10(output[output > 0])
-            elif model.data.zmin <= 0:
-                zmin_temp = model.data.zmin
+            elif self.data.zmin <= 0:
+                zmin_temp = self.data.zmin
                 output[output > 0] = np.zeros(len(output))
                 output[output <= 0] = -32
             else:
-                zmin_temp = model.data.zmin
+                zmin_temp = self.data.zmin
                 output[output > 0] = np.log10(output[output > 0])
         except:
             # Too many problems in 2D plot with scale
@@ -302,6 +309,16 @@ class Model:
         QxMax=0.3,
         cross_section = [0,1]
     ):
+        """Calculates rotationally averaged PSANS data for a provided model.
+        
+        theta, phi and omega are defined as given in the update document.
+        Min min and max values give the smallest and largest angles that
+        scattering will be calculated over, and d(theta, phi, omega) gives
+        the angle step size in degrees between individual scattering
+        calculations.  Scattering cross section can be defined using the 
+        cross_section field, and is (+-) by default.
+        
+        """
         # calculate total number of rotations for each axis
         numTheta = (thetaMax - thetaMin) / dtheta
         numPhi = (phiMax - phiMin) / dphi
